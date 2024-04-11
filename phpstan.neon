@@ -4,4 +4,5 @@ parameters:
     level: 8
     paths:
         - public
+        - templates
         - tests

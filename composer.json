@@ -10,7 +10,8 @@
     "require": {
         "php": "^8.1",
         "slim/slim": "^4.13",
-        "slim/psr7": "*"
+        "slim/psr7": "*",
+        "slim/php-view": "^3.2"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.9",
