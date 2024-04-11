@@ -1,0 +1,18 @@
+name: Run unit tests and linter
+on:
+  push:
+jobs:
+  Run-unit-tests-and-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Composer install
+        run: composer install
+
+      - name: Run unit tests
+        run: make test
+
+      - name: Run linter
+        run: make lint

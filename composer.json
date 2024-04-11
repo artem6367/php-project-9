@@ -1,0 +1,19 @@
+{
+    "name": "hexlet/code",
+    "type": "project",
+    "authors": [
+        {
+            "name": "artem6367",
+            "email": "artem_ivan1998@mail.ru"
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.13",
+        "slim/psr7": "*"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.9",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.5"
+    }
+}
