@@ -52,16 +52,21 @@ $urls = $this->getAttribute('urls');
                     </thead>
                     <tbody>
                         <?php foreach ($urls as $url) : ?>
-                        <tr>
-                            <td><?= $url['id'] ?></td>
-                            <td>
-                                <a href="/urls/<?= $url['id'] ?>">
-                                    <?= $url['name'] ?>
-                                </a>
-                            </td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                            <tr>
+                                <td><?= $url['id'] ?></td>
+                                <td>
+                                    <a href="/urls/<?= $url['id'] ?>">
+                                        <?= $url['name'] ?>
+                                    </a>
+                                </td>
+                                <?php if ($url['last_check'] === false) : ?>
+                                    <td></td>
+                                    <td></td>
+                                <?php else : ?>
+                                    <td><?= $url['last_check']['created_at'] ?></td>
+                                    <td><?= $url['last_check']['status_code'] ?></td>
+                                <?php endif; ?>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>

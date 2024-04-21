@@ -92,4 +92,45 @@ class AnalyzerDb
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([$id]);
     }
+
+    public function selectChecks(int $urlId): array
+    {
+        $sql = 'SELECT * FROM url_checks WHERE url_id=:url_id ORDER BY created_at DESC';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':url_id' => $urlId]);
+        if ($stmt === false) {
+            throw new \Exception('Не удалось получить список проверок');
+        }
+        return (array) $stmt->fetchAll();
+    }
+
+    public function selectLastCheck(array $urls): array
+    {
+        $newUrls = [];
+        foreach ($urls as $url) {
+            $sql = 'SELECT * FROM url_checks WHERE url_id=:url_id ORDER BY created_at DESC LIMIT 1';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':url_id' => $url['id']]);
+            $newUrl = $url;
+            $newUrl['last_check'] = $stmt->fetch();
+            $newUrls[] = $newUrl;
+        }
+
+        return $newUrls;
+    }
+
+    public function insertCheck(int $urlId): int
+    {
+        $sql = 'INSERT INTO url_checks (url_id, created_at) VALUES (:url_id, :created_at)';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':url_id' => $urlId,
+            'created_at' => Carbon::now()->toDateTimeString()
+        ]);
+        $id = $this->pdo->lastInsertId();
+        if ($id === false) {
+            throw new \Exception('Не удалось сохранить проверку');
+        }
+        return (int) $id;
+    }
 }
