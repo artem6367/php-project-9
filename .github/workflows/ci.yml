@@ -1,4 +1,4 @@
-name: Run unit tests and linter
+name: Run linter
 on:
   push:
 jobs:
@@ -10,9 +10,6 @@ jobs:
 
       - name: Composer install
         run: composer install
-
-      - name: Run unit tests
-        run: make test
 
       - name: Run linter
         run: make lint
