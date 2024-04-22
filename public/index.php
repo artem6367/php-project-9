@@ -72,6 +72,7 @@ $app->post('/urls', function (Request $request, Response $response, array $args)
             $redirectUrl = RouteContext::fromRequest($request)->getRouteParser()->urlFor('view url', ['id' => $id]);
             return $response->withStatus(302)->withHeader('Location', $redirectUrl);
         } catch (\Exception $e) {
+            $this->get('flash')->addMessage('error', 'Страница уже существует');
             $db = $this->get('db');
             $url = $db->selectOneUrlByName($name);
             $redirectUrl = RouteContext::fromRequest($request)
@@ -79,14 +80,12 @@ $app->post('/urls', function (Request $request, Response $response, array $args)
                 ->urlFor('view url', ['id' => $url->id]);
             return $response->withStatus(302)->withHeader('Location', $redirectUrl);
         }
-    } else {
-        $this->get('flash')->addMessage('error', 'Некорректный URL');
     }
-    $this->get('flash')->addMessage('url', $name);
 
-    $redirectUrl = RouteContext::fromRequest($request)->getRouteParser()->urlFor('main page');
-
-    return $response->withStatus(302)->withHeader('Location', $redirectUrl);
+    $renderer = new PhpRenderer(__DIR__ . '/../templates');
+    $renderer->addAttribute('error', 'Некорректный URL');
+    $renderer->addAttribute('url', $name);
+    return $renderer->render($response->withStatus(422), 'index.phtml');
 })->setName('create url');
 
 $app->get('/urls/{id}', function (Request $request, Response $response, array $args) {
