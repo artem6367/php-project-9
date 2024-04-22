@@ -6,3 +6,7 @@ parameters:
         - public
         - src
         - templates
+    ignoreErrors:
+        -
+            message: '#Undefined variable: \$this.*#'
+            path: public/index.php

@@ -63,17 +63,20 @@ $app->post('/urls', function (Request $request, Response $response, array $args)
 
     if ($v->validate()) {
         $db = $this->get('db');
-        $id = $db->insertUrl($url);
-        $this->get('flash')->addMessage('success', 'Страница успешно добавлена');
+        try {
+            $id = $db->insertUrl($url);
+            $this->get('flash')->addMessage('success', 'Страница успешно добавлена');
 
-        $url = RouteContext::fromRequest($request)->getRouteParser()->urlFor('view url', ['id' => $id]);
-        return $response->withStatus(302)->withHeader('Location', $url);
-    } else {
-        $this->get('flash')->addMessage('error', $url);
-        $url = RouteContext::fromRequest($request)->getRouteParser()->urlFor('main page');
-
-        return $response->withStatus(302)->withHeader('Location', $url);
+            $url = RouteContext::fromRequest($request)->getRouteParser()->urlFor('view url', ['id' => $id]);
+            return $response->withStatus(302)->withHeader('Location', $url);
+        } catch (\Exception $th) {
+        }
     }
+
+    $this->get('flash')->addMessage('error', $url);
+    $url = RouteContext::fromRequest($request)->getRouteParser()->urlFor('main page');
+
+    return $response->withStatus(302)->withHeader('Location', $url);
 })->setName('create url');
 
 $app->get('/urls/{id}', function (Request $request, Response $response, array $args) {

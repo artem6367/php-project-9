@@ -96,13 +96,6 @@ class AnalyzerDb
         return (int) $id;
     }
 
-    public function deleteUrl(int $id): bool
-    {
-        $sql = 'DELETE FROM urls WHERE id = ?';
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$id]);
-    }
-
     public function selectChecks(int $urlId): array
     {
         $sql = 'SELECT * FROM url_checks WHERE url_id=:url_id ORDER BY created_at DESC';
