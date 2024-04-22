@@ -69,14 +69,16 @@ $app->post('/urls', function (Request $request, Response $response, array $args)
 
             $url = RouteContext::fromRequest($request)->getRouteParser()->urlFor('view url', ['id' => $id]);
             return $response->withStatus(302)->withHeader('Location', $url);
-        } catch (\Exception $th) {
+        } catch (\Exception $e) {
+            $this->get('flash')->addMessage('error', 'Страница уже существует');
         }
+    } else {
+        $this->get('flash')->addMessage('error', 'Некорректный URL');
     }
 
-    $this->get('flash')->addMessage('error', $url);
-    $url = RouteContext::fromRequest($request)->getRouteParser()->urlFor('main page');
+    $redirectUrl = RouteContext::fromRequest($request)->getRouteParser()->urlFor('main page');
 
-    return $response->withStatus(302)->withHeader('Location', $url);
+    return $response->withStatus(302)->withHeader('Location', $redirectUrl);
 })->setName('create url');
 
 $app->get('/urls/{id}', function (Request $request, Response $response, array $args) {
