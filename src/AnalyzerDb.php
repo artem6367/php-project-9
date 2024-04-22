@@ -134,11 +134,15 @@ class AnalyzerDb
 
     public function insertCheck(Check $check): int
     {
-        $sql = 'INSERT INTO url_checks (url_id, status_code, created_at) VALUES (:url_id, :status_code, :created_at)';
+        $sql = 'INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at)
+            VALUES (:url_id, :status_code, :h1, :title, :description, :created_at)';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':url_id' => $check->url_id,
             ':status_code' => $check->status_code,
+            ':h1' => $check->h1,
+            ':title' => $check->title,
+            ':description' => $check->description,
             ':created_at' => Carbon::now()->toDateTimeString()
         ]);
         $id = $this->pdo->lastInsertId();
