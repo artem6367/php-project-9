@@ -44,8 +44,10 @@ $app->addErrorMiddleware(true, true, true);
 
 $app->get('/', function (Request $request, Response $response, array $args) {
     $error = $this->get('flash')->getFirstMessage('error');
+    $url = $this->get('flash')->getFirstMessage('url');
     $renderer = new PhpRenderer(__DIR__ . '/../templates');
     $renderer->addAttribute('error', $error);
+    $renderer->addAttribute('url', $url);
     if ($error) {
         return $renderer->render($response->withStatus(422), 'index.phtml');
     }
@@ -67,14 +69,15 @@ $app->post('/urls', function (Request $request, Response $response, array $args)
             $id = $db->insertUrl($url);
             $this->get('flash')->addMessage('success', 'Страница успешно добавлена');
 
-            $url = RouteContext::fromRequest($request)->getRouteParser()->urlFor('view url', ['id' => $id]);
-            return $response->withStatus(302)->withHeader('Location', $url);
+            $redirectUrl = RouteContext::fromRequest($request)->getRouteParser()->urlFor('view url', ['id' => $id]);
+            return $response->withStatus(302)->withHeader('Location', $redirectUrl);
         } catch (\Exception $e) {
             $this->get('flash')->addMessage('error', 'Страница уже существует');
         }
     } else {
         $this->get('flash')->addMessage('error', 'Некорректный URL');
     }
+    $this->get('flash')->addMessage('url', $url);
 
     $redirectUrl = RouteContext::fromRequest($request)->getRouteParser()->urlFor('main page');
 
