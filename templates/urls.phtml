@@ -1,6 +1,7 @@
 <?php
 
 /** @var \Slim\Views\PhpRenderer $this */
+/** @var \app\Url[] $urls */
 
 $urls = $this->getAttribute('urls');
 ?>
@@ -53,18 +54,18 @@ $urls = $this->getAttribute('urls');
                     <tbody>
                         <?php foreach ($urls as $url) : ?>
                             <tr>
-                                <td><?= $url['id'] ?></td>
+                                <td><?= $url->id ?></td>
                                 <td>
-                                    <a href="/urls/<?= $url['id'] ?>">
-                                        <?= $url['name'] ?>
+                                    <a href="/urls/<?= $url->id ?>">
+                                        <?= $url->name ?>
                                     </a>
                                 </td>
-                                <?php if ($url['last_check'] === false) : ?>
+                                <?php if ($url->last_check === false) : ?>
                                     <td></td>
                                     <td></td>
                                 <?php else : ?>
-                                    <td><?= $url['last_check']['created_at'] ?></td>
-                                    <td><?= $url['last_check']['status_code'] ?></td>
+                                    <td><?= $url->last_check->created_at ?></td>
+                                    <td><?= $url->last_check->status_code ?></td>
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>

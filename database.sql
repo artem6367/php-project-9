@@ -4,7 +4,6 @@ CREATE TABLE urls (
     created_at TIMESTAMP
 );
 
--- Создайте таблицу url_checks. Поля: id, url_id, status_code, h1, title, description, created_at
 CREATE TABLE url_checks (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     url_id BIGINT REFERENCES urls (id) NOT NULL,

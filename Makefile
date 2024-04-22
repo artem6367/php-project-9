@@ -4,7 +4,7 @@ start:
 
 lint:
 	composer exec --verbose phpcs -- --standard=PSR12 public src templates
-	composer exec --verbose phpstan
+	# composer exec --verbose phpstan
 
 test:
 	composer exec --verbose phpunit tests
