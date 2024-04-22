@@ -84,6 +84,20 @@ class AnalyzerDb
         return $url;
     }
 
+    public function selectOneUrlByName(string $name): Url
+    {
+        $sql = 'SELECT * FROM urls WHERE name=:name';
+        $stmt = $this->pdo->prepare($sql);
+        if ($stmt === false) {
+            throw new \Exception('Не удалось получить url');
+        }
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, Url::class);
+        $stmt->execute([':name' => $name]);
+        $url = $stmt->fetch();
+
+        return $url;
+    }
+
     public function insertUrl(string $name): int
     {
         $sql = 'INSERT INTO urls (name, created_at) VALUES (:name, :created_at)';

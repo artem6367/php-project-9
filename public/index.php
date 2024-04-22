@@ -57,27 +57,32 @@ $app->get('/', function (Request $request, Response $response, array $args) {
 
 $app->post('/urls', function (Request $request, Response $response, array $args) {
     $content = urldecode($request->getBody()->getContents());
-    $url = \Illuminate\Support\Str::after($content, 'url[name]=');
+    $name = \Illuminate\Support\Str::after($content, 'url[name]=');
 
-    $v = new Validator(['url' => $url]);
+    $v = new Validator(['url' => $name]);
     $v->rule('required', 'url');
     $v->rule('url', 'url');
 
     if ($v->validate()) {
         $db = $this->get('db');
         try {
-            $id = $db->insertUrl($url);
+            $id = $db->insertUrl($name);
             $this->get('flash')->addMessage('success', 'Страница успешно добавлена');
 
             $redirectUrl = RouteContext::fromRequest($request)->getRouteParser()->urlFor('view url', ['id' => $id]);
             return $response->withStatus(302)->withHeader('Location', $redirectUrl);
         } catch (\Exception $e) {
-            $this->get('flash')->addMessage('error', 'Страница уже существует');
+            $db = $this->get('db');
+            $url = $db->selectOneUrlByName($name);
+            $redirectUrl = RouteContext::fromRequest($request)
+                ->getRouteParser()
+                ->urlFor('view url', ['id' => $url->id]);
+            return $response->withStatus(302)->withHeader('Location', $redirectUrl);
         }
     } else {
         $this->get('flash')->addMessage('error', 'Некорректный URL');
     }
-    $this->get('flash')->addMessage('url', $url);
+    $this->get('flash')->addMessage('url', $name);
 
     $redirectUrl = RouteContext::fromRequest($request)->getRouteParser()->urlFor('main page');
 
